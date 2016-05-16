@@ -4,19 +4,17 @@
  */
 package com.baidu.unbiz.common.genericdao.dao;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
+import com.baidu.ub.common.commons.ThreadContext;
+import com.baidu.unbiz.common.genericdao.annotation.Sequence;
+import com.baidu.unbiz.common.genericdao.bo.InsertOption;
+import com.baidu.unbiz.common.genericdao.mapper.GenericMapper;
+import com.baidu.unbiz.common.genericdao.mapper.ORMapping;
+import com.baidu.unbiz.common.genericdao.mapper.QueryGenerator;
+import com.baidu.unbiz.common.genericdao.operator.*;
+import com.baidu.unbiz.common.genericdao.sequence.SequenceGenerator;
+import com.baidu.unbiz.common.genericdao.util.ClassUtils;
+import com.github.knightliao.apollo.db.bo.BaseObject;
+import com.mysql.jdbc.Statement;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -25,20 +23,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.CollectionUtils;
 
-import com.baidu.ub.common.commons.ThreadContext;
-import com.baidu.unbiz.common.genericdao.annotation.Sequence;
-import com.baidu.unbiz.common.genericdao.bo.InsertOption;
-import com.baidu.unbiz.common.genericdao.mapper.GenericMapper;
-import com.baidu.unbiz.common.genericdao.mapper.ORMapping;
-import com.baidu.unbiz.common.genericdao.mapper.QueryGenerator;
-import com.baidu.unbiz.common.genericdao.operator.Match;
-import com.baidu.unbiz.common.genericdao.operator.Modify;
-import com.baidu.unbiz.common.genericdao.operator.Operators;
-import com.baidu.unbiz.common.genericdao.operator.Order;
-import com.baidu.unbiz.common.genericdao.operator.Query;
-import com.baidu.unbiz.common.genericdao.sequence.SequenceGenerator;
-import com.baidu.unbiz.common.genericdao.util.ClassUtils;
-import com.github.knightliao.apollo.db.bo.BaseObject;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * 虚拟的父类
@@ -815,7 +806,7 @@ public abstract class GenericDao<KEY extends Serializable, ENTITY extends BaseOb
         // 执行操作
         int rowCount = this.jdbcTemplate.update(new PreparedStatementCreator() {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(sql);
+                PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
                 int index = 1;
                 for (Object param : params) {
                     ps.setObject(index++, param);
@@ -847,7 +838,7 @@ public abstract class GenericDao<KEY extends Serializable, ENTITY extends BaseOb
         // 执行操作
         int rowCount = this.jdbcTemplate.update(new PreparedStatementCreator() {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(sql);
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 int index = 1;
                 for (Object param : params) {
                     ps.setObject(index++, param);

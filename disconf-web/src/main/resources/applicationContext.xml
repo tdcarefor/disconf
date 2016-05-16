@@ -39,11 +39,11 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath*:/jdbc-mysql.properties</value>
-                <value>classpath*:/application.properties</value>
-                <value>classpath*:/zoo.properties</value>
-                <value>classpath*:/redis-config.properties</value>
-                <value>classpath*:/application.properties</value>
+                <value>classpath*:/config/jdbc-mysql.properties</value>
+                <value>classpath*:/config/application.properties</value>
+                <value>classpath*:/config/zoo.properties</value>
+                <value>classpath*:/config/redis-config.properties</value>
+
             </list>
         </property>
     </bean>
