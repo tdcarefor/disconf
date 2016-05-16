@@ -1,0 +1,34 @@
+version: 2.0
+
+test:
+    image:
+        daocloud/ci-golang:1.4
+
+    services:
+
+    # using default docker-link env
+    env:
+        - REDIS_PORT_6379_TCP_PROTO = "tcp"
+        - REDIS_PASSWORD = ""
+
+    install:
+
+    before_script:
+
+    script:
+        - export GOPATH=/gopath
+
+build:
+    lite_image:
+        compile:
+            dockerfile_path: Dockerfile
+            build_dir: /
+            cache: true
+
+        extract:
+            - /code/doctor-advice/target/doctor-advice-1.0.0.war
+
+        package:
+              dockerfile_path: Dockerfile-doctor-advice.sec
+              build_dir: /
+              cache: true
